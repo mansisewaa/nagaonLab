@@ -76,6 +76,7 @@ class PatientDetailsController extends Controller
                 $investigation_name = DB::table('investigation')
                     ->select('id', 'investname', 'price')->where('deleted_at', null)
                     ->get();
+                $wallet = User::where('id', auth()->user()->id)->value('wallet_balance');
             }
         }
         $refer  = Referrer::select('doctorname', 'id')->where('created_by', '=', auth()->user()->id)->get();
@@ -85,8 +86,9 @@ class PatientDetailsController extends Controller
         $investigation_name = DB::table('investigation')
         ->select('id', 'investname', 'price')->where('deleted_at', null)
         ->get();
+        $wallet = User::where('id', auth()->user()->id)->value('wallet_balance');
 
-        return view('pages.add-patient-details', compact('refer', 'center', 'agents', 'investigation_name'));
+        return view('pages.add-patient-details', compact('refer', 'center', 'agents', 'investigation_name','wallet'));
     }
 
     /**
@@ -525,15 +527,15 @@ class PatientDetailsController extends Controller
 
     public function getreferrer()
     {
-        return response()->json(Referrer::all());
+        return response()->json(Referrer::select('id', 'doctorname')->where('created_by', auth()->user()->id)->get());
     }
     public function getcenter()
     {
-        return response()->json(CollectionCenter::all());
+        return response()->json(CollectionCenter::select('id', 'doctorname')->where('created_by', auth()->user()->id)->get());
     }
     public function getagent()
     {
-        return response()->json(CollectionAgent::all());
+        return response()->json(CollectionAgent::select('id', 'doctorname')->where('created_by', auth()->user()->id)->get());
     }
 
 

@@ -18,46 +18,53 @@
 
         </div>
       </form> --}}
-      <ul class="navbar-nav">
-			@if (auth()->user()->type == 'CC')
-                <li class="nav-item dropdown">
-                    <a class="nav-link" href="#" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="material-icons">wallet</i>{{ __('Wallet') }}</a>
+			<ul class="navbar-nav">
+				@if (auth()->user()->type == 'CC')
+					<li class="nav-item dropdown">
+						@php
+							$wallet = DB::table('users')
+							->where('id', auth()->user()->id)
+							->value('wallet_balance');
+						@endphp
+						<a class="nav-link" href="#" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false">
+							<i class="material-icons">wallet</i><strong>{{ __('Wallet') }} - Rs {{ $wallet }}</strong></a>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                        {{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
-                        @php
-                            $wallet = DB::table('users')->where('id', auth()->user()->id)->value('wallet_balance');
-                        @endphp
-                        <a class="dropdown-item" href="#">
-                            Rs {{$wallet}}
-                        </a>
-                    </div>
-                </li>
-			@endif
+						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
+							{{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
+							@php
+								$wallet = DB::table('users')
+								->where('id', auth()->user()->id)
+								->value('wallet_balance');
+							@endphp
+							<a class="dropdown-item" href="#">
+								Rs {{ $wallet }}
+							</a>
+						</div>
+					</li>
+				@endif
 
-			<li class="nav-item dropdown">
-				<a class="nav-link" href="#" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true"
-					aria-expanded="false">
-					<i class="material-icons">person</i>{{ auth::user()->name }}
+				<li class="nav-item dropdown">
+					<a class="nav-link" href="#" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">
+						<i class="material-icons">person</i>{{ auth::user()->name }}
 
-				</a>
-				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-					{{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
-					@if(auth()->user()->type == "CC")
-                    <a class="dropdown-item" href="{{ route('recharge-wallet') }}">Recharge Wallet</a>
-                    @endif
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
+						{{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
+						@if (auth()->user()->type == 'CC')
+							<a class="dropdown-item" href="{{ route('recharge-wallet') }}">Recharge Wallet</a>
+						@endif
 
-					<a class="dropdown-item" href="{{ route('logout') }}"
-						onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Log out') }}</a>
+						<a class="dropdown-item" href="{{ route('logout') }}"
+							onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Log out') }}</a>
 
-					<form id="logout-form" class="d-none" method="POST" action="{{ route('logout') }}">
-						@csrf
-					</form>
+						<form id="logout-form" class="d-none" method="POST" action="{{ route('logout') }}">
+							@csrf
+						</form>
 
-				</div>
-			</li>
+					</div>
+				</li>
 			</ul>
 		</div>
 	</div>
