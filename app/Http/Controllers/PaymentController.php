@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ledger;
 use App\Models\OrderId;
 use App\Models\PaymentWalletRecharge;
+use App\Models\User;
 use App\Models\WalletMaster;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
@@ -94,10 +95,10 @@ class PaymentController extends Controller
             ];
             $ledger = Ledger::create($ledger_data);
 
-            $wallet = WalletMaster::where('center_id',auth()->user()->id)->first();
-            $wallet_amount = $wallet->wallet_amount + $request->amount;
+            $wallet = User::where('id',auth()->user()->id)->first();
+            $wallet_amount = $wallet->wallet_balance + $request->amount;
             $wallet->update([
-                'wallet_amount' => $wallet_amount,
+                'wallet_balance' => $wallet_amount,
             ]);
         }
         return response()->json(['success' => 'Payment Successful']);

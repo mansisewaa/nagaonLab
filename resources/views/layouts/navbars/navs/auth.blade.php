@@ -28,7 +28,7 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
                         {{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
                         @php
-                            $wallet = DB::table('wallet_masters')->where('center_id', auth()->user()->id)->value('wallet_amount');
+                            $wallet = DB::table('users')->where('id', auth()->user()->id)->value('wallet_balance');
                         @endphp
                         <a class="dropdown-item" href="#">
                             Rs {{$wallet}}
@@ -45,7 +45,9 @@
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
 					{{-- <a class="dropdown-item" href="">{{ __('Profile') }}</a> --}}
-					<a class="dropdown-item" href="{{ route('recharge-wallet') }}">Recharge Wallet</a>
+					@if(auth()->user()->type == "CC")
+                    <a class="dropdown-item" href="{{ route('recharge-wallet') }}">Recharge Wallet</a>
+                    @endif
 
 					<a class="dropdown-item" href="{{ route('logout') }}"
 						onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('Log out') }}</a>

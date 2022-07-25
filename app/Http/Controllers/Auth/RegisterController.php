@@ -94,24 +94,24 @@ class RegisterController extends Controller
             'referrer' => '1',
         ]);
 
-        if($user->type == 'CC'){
+        // if($user->type == 'CC'){
 
-         try {
-                WalletMaster::create([
-                    'center_id' => $user->id,
-                    'wallet_amount' => '0',
-                ]);
-                Ledger::create([
-                    'coll_center_id' => $user->id,
-                    'ledger_type' => 'OB',//opening balance
-                    'transaction_id' => $user->id,
-                ]);
+        //  try {
+        //         WalletMaster::create([
+        //             'center_id' => $user->id,
+        //             'wallet_amount' => '0',
+        //         ]);
+        //         Ledger::create([
+        //             'coll_center_id' => $user->id,
+        //             'ledger_type' => 'OB',//opening balance
+        //             'transaction_id' => $user->id,
+        //         ]);
 
-         } catch (\Throwable $th) {
-            //throw $th;
-            dd($th);
-         }
-        }
+        //  } catch (\Throwable $th) {
+        //     //throw $th;
+        //     dd($th);
+        //  }
+        // }
         return $user;
     }
 }

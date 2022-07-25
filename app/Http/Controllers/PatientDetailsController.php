@@ -11,6 +11,7 @@ use App\Models\Referrer;
 use App\Models\Status;
 use App\Models\Test;
 use App\Models\TestTransaction;
+use App\Models\User;
 use App\Models\WalletMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -177,9 +178,9 @@ class PatientDetailsController extends Controller
                     'debit'          => $request->input('advance'),
                 ];
                 Ledger::create($ledger_data);
-                $wallet = WalletMaster::where('center_id', auth()->user()->id)->first();
-                $updated_amount = $wallet->wallet_amount - $request->input('advance');
-                $wallet->update(['wallet_amount' => $updated_amount]);
+                $wallet = User::where('id', auth()->user()->id)->first();
+                $updated_amount = $wallet->wallet_balance - $request->input('advance');
+                $wallet->update(['wallet_balance' => $updated_amount]);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -281,9 +282,9 @@ class PatientDetailsController extends Controller
                     'debit'          => $request->input('advance'),
                 ];
                 Ledger::create($ledger_data);
-                $wallet = WalletMaster::where('center_id', auth()->user()->id)->first();
-                $updated_amount = $wallet->wallet_amount - $request->input('advance');
-                $wallet->update(['wallet_amount' => $updated_amount]);
+                $wallet = User::where('id', auth()->user()->id)->first();
+                $updated_amount = $wallet->wallet_balance - $request->input('advance');
+                $wallet->update(['wallet_balance' => $updated_amount]);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
