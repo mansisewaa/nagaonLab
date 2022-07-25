@@ -64,15 +64,27 @@ class PatientDetailsController extends Controller
 
     public function home()
     {
-        // dd('here');
+        if (auth()->user()->type == "CC") {
+            $wallet = User::where('id', auth()->user()->id)->value('wallet_balance');
+            if ($wallet == 0.00) {
+                return redirect()->back()->with('error', 'Your wallet is empty. Please recharge your wallet to continue');
+            } else {
+                $refer  = Referrer::select('doctorname', 'id')->where('created_by', '=', auth()->user()->id)->get();
+                $center = CollectionCenter::select('name', 'id')->where('created_by', '=', auth()->user()->id)->get();
+                $agents = CollectionAgent::select('agentname', 'id')->where('created_by', '=', auth()->user()->id)->get();
+
+                $investigation_name = DB::table('investigation')
+                    ->select('id', 'investname', 'price')->where('deleted_at', null)
+                    ->get();
+            }
+        }
         $refer  = Referrer::select('doctorname', 'id')->where('created_by', '=', auth()->user()->id)->get();
         $center = CollectionCenter::select('name', 'id')->where('created_by', '=', auth()->user()->id)->get();
         $agents = CollectionAgent::select('agentname', 'id')->where('created_by', '=', auth()->user()->id)->get();
 
         $investigation_name = DB::table('investigation')
-            ->select('id', 'investname', 'price')->where('deleted_at', null)
-            ->get();
-        // dd($investigation_name);
+        ->select('id', 'investname', 'price')->where('deleted_at', null)
+        ->get();
 
         return view('pages.add-patient-details', compact('refer', 'center', 'agents', 'investigation_name'));
     }
