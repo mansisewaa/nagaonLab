@@ -282,6 +282,7 @@
 												<td style="width:10%;">
 													<input type="number" step="0.01" name="price" id="price" class="form-control input-sm text-right price"
 														placeholder="Price" oninput="calculatePrice(this)" oninput="calculatePriceinRs(this)">
+                                                    <input type="hidden" class="form-control" id="wallet" value="{{$wallet}}">
 												</td>
 
 												<td>
@@ -488,11 +489,7 @@
 								<div class="form-group col-md-12">
 									<label>Collection Center</label>
 									<select type="select" class="form-control" name="center_id" id="center_id">
-										<option>-Select-</option>
-										@foreach ($center as $key => $value)
-											<option value="{{ $key }}">{{ $value }}
-											</option>
-										@endforeach
+										<option value="{{ auth()->user()->id }}">{{ auth()->user()->lab_name }}</option>
 									</select>
 								</div>
 							</div>
@@ -549,6 +546,7 @@
                     var a = $(this).val();
                     var sum = 0;
                     var $this = $(this);
+                    var wallet = $('#wallet').val();
                     var list = $this.find("option:selected");
                     console.log($this.find("option:selected"));
                     $.each(list, function(index, item) {
@@ -560,7 +558,13 @@
                     })
                     //   $("#in_price").val(data.price);
                     $("#price").val(sum);
-                    //    $("#invest_id").u(id);
+                    if(sum > wallet){
+                        $("#price").css('color','red');
+                        alert('Insufficient Wallet Balance');
+                    }
+                    if(sum < wallet){
+                        $("#price").css('color','black');
+                    }
 
                 })
 
@@ -883,4 +887,5 @@
 
             });
         </script>
+
 @endpush
