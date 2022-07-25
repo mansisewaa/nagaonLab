@@ -17,6 +17,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $guarded = ['id'];
     protected $fillable = [
         'name',
         'email',
@@ -34,6 +35,7 @@ class User extends Authenticatable
         'coll_agents',
         'investigations',
         'referrer',
+        'wallet_balance',
     ];
 
     /**
