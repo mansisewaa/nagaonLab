@@ -273,17 +273,17 @@ class PatientDetailsController extends Controller
                     "inv_price"             => $invname[1],
                 ]);
             }
-            if (auth()->user()->type == 'CC') {
-                $data = [
-                    'coll_center_id'    => auth()->user()->id,
-                    'ledger_type'       => 'PB', //Patient Bill
-                    'transaction_id'    => $patientdetails->id,
-                    'debit'             => $request('advance'),
+            if (auth()->user()->type == "CC") {
+                $ledger_data = [
+                    'coll_center_id' => auth()->user()->id,
+                    'transaction_id' => $patientdetails->id,
+                    'ledger_type'    => 'PB', // patient bill
+                    'debit'          => $request->input('advance'),
                 ];
-                $ledger = Ledger::create($data);
-
-                WalletMaster::where('center_id', auth()->user()->id)
-                    ->decrement('wallet_amount', $request('advance'));
+                Ledger::create($ledger_data);
+                $wallet = WalletMaster::where('center_id', auth()->user()->id)->first();
+                $updated_amount = $wallet->wallet_amount - $request->input('advance');
+                $wallet->update(['wallet_amount' => $updated_amount]);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
