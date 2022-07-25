@@ -16,7 +16,7 @@ class CollectionAgentController extends Controller
     public function index()
     {
         // return view('pages.collectionAgents');
-        $center = CollectionCenter::pluck('name', 'id');
+        $center = CollectionCenter::where('created_by',auth()->user()->id)->pluck('name', 'id');
         // return view('pages.collectionAgents', compact('data'));
         if(auth()->user()->type == 'M'){
             $data = CollectionAgent::all();

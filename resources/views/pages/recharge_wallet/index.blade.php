@@ -9,7 +9,8 @@
 				</div>
 				<hr>
 				<div class="card-body" style="margin-left:20px;">
-					<form action="{{ route('')}}">
+					<form action="{{ route('order_id_generate')}}" method="POST">
+						@csrf
 						<div class="row">
 							<div class="col-sm-4">
 								<label for="" style="color:black"> Enter Amount</label>
@@ -20,10 +21,12 @@
 							</div>
 
 						</div>
+
 					</form>
 				</div>
 			</div>
 		</div>
+
 	</div>
 @endsection
 @push('js')

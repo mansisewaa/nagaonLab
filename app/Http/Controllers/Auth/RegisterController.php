@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ledger;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Permission;
+use App\Models\WalletMaster;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -73,8 +75,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -91,8 +92,26 @@ class RegisterController extends Controller
             'coll_agents'=>'1',
             'investigations' => '1',
             'referrer' => '1',
-
-
         ]);
+
+        if($user->type == 'CC'){
+
+         try {
+                WalletMaster::create([
+                    'center_id' => $user->id,
+                    'wallet_amount' => '0',
+                ]);
+                Ledger::create([
+                    'coll_center_id' => $user->id,
+                    'ledger_type' => 'OB',//opening balance
+                    'transaction_id' => $user->id,
+                ]);
+
+         } catch (\Throwable $th) {
+            //throw $th;
+            dd($th);
+         }
+        }
+        return $user;
     }
 }

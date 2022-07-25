@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\CollectionAgent;
 use App\Models\CollectionCenter;
 use App\Models\Investigation;
+use App\Models\Ledger;
 use App\Models\PatientDetails;
 use App\Models\Referrer;
 use App\Models\Status;
 use App\Models\Test;
 use App\Models\TestTransaction;
+use App\Models\WalletMaster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon;
@@ -82,6 +84,8 @@ class PatientDetailsController extends Controller
      */
     public function store(Request $request)
     {
+        // dd(auth()->user()->type);
+
         $request->validate([
             'title'              => 'required',
             'fname'              => 'required',
@@ -103,79 +107,83 @@ class PatientDetailsController extends Controller
                 // dd('+1');
                 $receipt_no = $getreceipt->receipt_no + 1;
             }
-        // dd($receipt_no);
+            // dd($receipt_no);
             $status     = 'Under Process';
             $currentDate = Carbon\Carbon::now();
             $currentDate->toDateTimeString();
             $cd = $currentDate->format('Y-m-d');
 
             $patientdetails = PatientDetails::create([
-                'receipt_no' => $receipt_no,
-                'title'      => $request->input('title'),
-                'fname'      => $request->input('fname'),
-                'lname'      => $request->input('lname'),
-                'years'      => $request->input('years'),
-                'months'     => $request->input('months'),
-                'days'       => $request->input('days'),
-                'mobile'     => $request->input('mobile'),
-                'email'      => $request->input('email'),
-                'address'    => $request->input('address'),
-                'city'       => $request->input('city'),
-                'state'      => $request->input('state'),
-                'gender'     => $request->input('gender'),
-                'refer'      => $request->input('refer'),
-                'center'     => $request->input('center'),
-                'agent'      => $request->input('agent'),
-                'mode'       => $request->input('mode'),
-                'status'     => $status,
-                'price'    => $request->input("price"),
-                'discount_type' => $request->input("discount_type"),
-                'discountRs'    => $request->input('discountRs'),
-                'discount' => $request->input("discount"),
-                'total'    => $request->input('total'),
-                'advance'  => $request->input("advance"),
-                'balance'  => $request->input('balance'),
-                'tdiscount' => $request->input('tdiscount'),
-                'created_by' => auth()->user()->id,
-                'date_of_advance' => $cd,
+                'receipt_no'        => $receipt_no,
+                'title'             => $request->input('title'),
+                'fname'             => $request->input('fname'),
+                'lname'             => $request->input('lname'),
+                'years'             => $request->input('years'),
+                'months'            => $request->input('months'),
+                'days'              => $request->input('days'),
+                'mobile'            => $request->input('mobile'),
+                'email'             => $request->input('email'),
+                'address'           => $request->input('address'),
+                'city'              => $request->input('city'),
+                'state'             => $request->input('state'),
+                'gender'            => $request->input('gender'),
+                'refer'             => $request->input('refer'),
+                'center'            => $request->input('center'),
+                'agent'             => $request->input('agent'),
+                'mode'              => $request->input('mode'),
+                'status'            => $status,
+                'price'             => $request->input("price"),
+                'discount_type'     => $request->input("discount_type"),
+                'discountRs'        => $request->input('discountRs'),
+                'discount'          => $request->input("discount"),
+                'total'             => $request->input('total'),
+                'advance'           => $request->input("advance"),
+                'balance'           => $request->input('balance'),
+                'tdiscount'         => $request->input('tdiscount'),
+                'created_by'        => auth()->user()->id,
+                'date_of_advance'   => $cd,
             ]);
+            // dd($patientdetails);
 
             $investigation_name = $request->input('investigation_name');
 
             $test = $patientdetails->tests()->create([
-                'price'    => request("price"),
+                'price'         => request("price"),
                 'discountRs'    => $request->input('discountRs'),
-                'discount' => request("discount"),
-                'total'    => $request->input('total'),
-                'advance'  => request("advance"),
-                'balance'  => request('balance'),
-                'tdiscount' => request('tdiscount'),
+                'discount'      => request("discount"),
+                'total'         => $request->input('total'),
+                'advance'       => request("advance"),
+                'balance'       => request('balance'),
+                'tdiscount'     => request('tdiscount'),
             ]);
+            // dd($test);
             foreach ($investigation_name as $value) {
                 $invname = explode('-', $value, 2);
                 // dd($invname);
 
                 $test->transactions()->create([
-                    "patient_id" => $patientdetails->id,
-                    "invastigation_name" => $value,
-                    "inv_name" => $invname[0],
-                    "inv_price" => $invname[1],
+                    "patient_id"            => $patientdetails->id,
+                    "invastigation_name"    => $value,
+                    "inv_name"              => $invname[0],
+                    "inv_price"             => $invname[1],
                 ]);
             }
 
-            if(auth()->user()->type == 'CC')
-            {
-                $data = [
+            if (auth()->user()->type == "CC") {
+                $ledger_data = [
                     'coll_center_id' => auth()->user()->id,
-                    'ledger_type' => 'PB',
                     'transaction_id' => $patientdetails->id,
-                    'debit' => $request->input('total'),
+                    'ledger_type'    => 'PB', // patient bill
+                    'debit'          => $request->input('advance'),
                 ];
-
+                Ledger::create($ledger_data);
+                $wallet = WalletMaster::where('center_id', auth()->user()->id)->first();
+                $updated_amount = $wallet->wallet_amount - $request->input('advance');
+                $wallet->update(['wallet_amount' => $updated_amount]);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
-            // dd($th);
+            dd($th);
             return redirect()
                 ->back()
                 ->with('error', $th->getMessage());
@@ -214,56 +222,68 @@ class PatientDetailsController extends Controller
             $status     = 'Under Process';
 
             $patientdetails = PatientDetails::create([
-                'receipt_no' => $receipt_no,
-                'ref_previous_id' => request('reference'),
-                'title'      => $request->input('title'),
-                'fname'      => $request->input('fname'),
-                'lname'      => $request->input('lname'),
-                'years'      => $request->input('years'),
-                'months'     => $request->input('months'),
-                'days'       => $request->input('days'),
-                'mobile'     => $request->input('mobile'),
-                'email'      => $request->input('email'),
-                'address'    => $request->input('address'),
-                'city'       => $request->input('city'),
-                'state'      => $request->input('state'),
-                'gender'     => $request->input('gender'),
-                'refer'      => $request->input('refer'),
-                'center'     => $request->input('center'),
-                'agent'      => $request->input('agent'),
-                'mode'       => $request->input('mode'),
-                'status'     => $status,
-                'price'    => request("price"),
-                'discount_type' => $request->input("discount_type"),
-                'discountRs'    => $request->input('discountRs'),
-                'discount' => request("discount"),
-                'total'    => request('total'),
-                'advance'  => request("advance"),
-                'balance'  => request('balance'),
-                'tdiscount' => request('tdiscount'),
-                'created_by' => auth()->user()->id,
+                'receipt_no'            => $receipt_no,
+                'ref_previous_id'       => request('reference'),
+                'title'                 => $request->input('title'),
+                'fname'                 => $request->input('fname'),
+                'lname'                 => $request->input('lname'),
+                'years'                 => $request->input('years'),
+                'months'                => $request->input('months'),
+                'days'                  => $request->input('days'),
+                'mobile'                => $request->input('mobile'),
+                'email'                 => $request->input('email'),
+                'address'               => $request->input('address'),
+                'city'                  => $request->input('city'),
+                'state'                 => $request->input('state'),
+                'gender'                => $request->input('gender'),
+                'refer'                 => $request->input('refer'),
+                'center'                => $request->input('center'),
+                'agent'                 => $request->input('agent'),
+                'mode'                  => $request->input('mode'),
+                'status'                => $status,
+                'price'                 => request("price"),
+                'discount_type'         => $request->input("discount_type"),
+                'discountRs'            => $request->input('discountRs'),
+                'discount'              => request("discount"),
+                'total'                 => request('total'),
+                'advance'               => request("advance"),
+                'balance'               => request('balance'),
+                'tdiscount'             => request('tdiscount'),
+                'created_by'            => auth()->user()->id,
             ]);
 
             $investigation_name = $request->input('investigation_name');
 
             $test = $patientdetails->tests()->create([
-                'price'    => request("price"),
-                'discount' => request("discount"),
+                'price'         => request("price"),
+                'discount'      => request("discount"),
                 'discountRs'    => request("discountRs"),
-                'total'    => request('total'),
-                'advance'  => request("advance"),
-                'balance'  => request('balance'),
-                'tdiscount' => request('tdiscount'),
+                'total'         => request('total'),
+                'advance'       => request("advance"),
+                'balance'       => request('balance'),
+                'tdiscount'     => request('tdiscount'),
             ]);
             foreach ($investigation_name as $value) {
                 $invname = explode('-', $value, 2);
 
                 $test->transactions()->create([
-                    "patient_id" => $patientdetails->id,
-                    "invastigation_name" => $value,
-                    "inv_name" => $invname[0],
-                    "inv_price" => $invname[1],
+                    "patient_id"            => $patientdetails->id,
+                    "invastigation_name"    => $value,
+                    "inv_name"              => $invname[0],
+                    "inv_price"             => $invname[1],
                 ]);
+            }
+            if (auth()->user()->type == "CC") {
+                $ledger_data = [
+                    'coll_center_id' => auth()->user()->id,
+                    'transaction_id' => $patientdetails->id,
+                    'ledger_type'    => 'PB', // patient bill
+                    'debit'          => $request->input('advance'),
+                ];
+                Ledger::create($ledger_data);
+                $wallet = WalletMaster::where('center_id', auth()->user()->id)->first();
+                $updated_amount = $wallet->wallet_amount - $request->input('advance');
+                $wallet->update(['wallet_amount' => $updated_amount]);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -309,8 +329,8 @@ class PatientDetailsController extends Controller
         $agents             = CollectionAgent::pluck('agentname', 'id');
         // $investigation_name = Investigation::pluck('investname', 'price');
         $investigation_name = DB::table('investigation')
-        ->select('id', 'investname', 'price')->where('deleted_at', null)
-        ->get();
+            ->select('id', 'investname', 'price')->where('deleted_at', null)
+            ->get();
 
 
         $caseEdit = DB::table('patient_details')
@@ -318,12 +338,12 @@ class PatientDetailsController extends Controller
             ->select('patient_details.*', 'test_transactions.*')
             ->where('patient_details.id', '=', $id)
             ->get();
-    //    dd($caseEdit);
+        //    dd($caseEdit);
 
         $getinv = DB::table('test_transactions')
-        ->select('invastigation_name')->where('patient_id', '=', $id)->get();
+            ->select('invastigation_name')->where('patient_id', '=', $id)->get();
         // dd($getinv);
-        foreach( $getinv as $inv ){
+        foreach ($getinv as $inv) {
             $invname[] = $inv->invastigation_name;
         }
         // dd($invname);
@@ -331,7 +351,7 @@ class PatientDetailsController extends Controller
         // $investigation_name = Investigation::whereNotIn('investname', $caseEdit->investigation_name)->pluck('investname', 'price');
 
 
-        return view('pages.edit-patient-details', compact('caseEdit', 'refer', 'center', 'agents', 'investigation_name', 'getinv','invname'));
+        return view('pages.edit-patient-details', compact('caseEdit', 'refer', 'center', 'agents', 'investigation_name', 'getinv', 'invname'));
     }
 
     /**
@@ -394,15 +414,15 @@ class PatientDetailsController extends Controller
                 'balance'  => request('balance'),
             ]);
             foreach ($investigation_name as $value) {
-             $invname = explode('-', $value, 2);
+                $invname = explode('-', $value, 2);
 
-            $transaction = TestTransaction::where('patient_id', $id)->update([
-                'invastigation_name' => $value,
-                "inv_name"           => $invname[0],
-                "inv_price"          => $invname[1],
+                $transaction = TestTransaction::where('patient_id', $id)->update([
+                    'invastigation_name' => $value,
+                    "inv_name"           => $invname[0],
+                    "inv_price"          => $invname[1],
 
-            ]);
-        }
+                ]);
+            }
 
             // $investigation_name = $request->input('investigation_name');
 
@@ -426,7 +446,7 @@ class PatientDetailsController extends Controller
             // }
         } catch (\Throwable $th) {
             DB::rollBack();
-             dd($th);
+            dd($th);
             return redirect()
                 ->back()
                 ->with('error', $th->getMessage());
@@ -455,7 +475,7 @@ class PatientDetailsController extends Controller
         $details             = new Referrer();
         $details->doctorname = $request->doctorname;
         $details->specialin  = $request->specialin;
-
+        $details->created_by = auth()->user()->id;
         $details->save();
         return response()->json($details);
     }
@@ -471,7 +491,7 @@ class PatientDetailsController extends Controller
         $center->zip     = $request->zip;
         $center->mobile  = $request->mobile;
         $center->email   = $request->email;
-
+        $center->created_by = auth()->user()->id;
         $center->save();
 
         return response()->json($center);
@@ -484,7 +504,7 @@ class PatientDetailsController extends Controller
 
         $agent->mobile  = $request->mobile;
         $agent->address = $request->address;
-
+        $agent->created_by = auth()->user()->id;
         $agent->save();
 
         return response()->json($agent);
