@@ -102,7 +102,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::get('recharge-wallet-index', 'App\Http\Controllers\PaymentController@index')->name('recharge-wallet-index');
+    Route::get('/recharge-wallet',[App\Http\Controllers\PaymentController::class,'index'])->name('recharge-wallet');
+    Route::post('/order_id_generate', [App\Http\Controllers\PaymentController::class, 'orderIdGenerate'])->name('order_id_generate');
+    Route::get('payment', [App\Http\Controllers\PaymentController::class, 'paymentIndex'])->name('payment');
+    Route::post('/store-payment', [App\Http\Controllers\PaymentController::class, 'storePayment'])->name('store-payment');
 
 
     Route::group(['middleware' => 'auth'], function () {
