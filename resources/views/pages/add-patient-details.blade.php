@@ -1,5 +1,4 @@
 @extends('layouts.app', ['activePage' => 'patientdetails', 'titlePage' => __('Patient Details')])
-
 <style>
 	.main-panel>.content {
 		margin-top: 16px !important;
@@ -59,7 +58,6 @@
 	}
 
 </style>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
 	integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
 	crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -248,10 +246,10 @@
 											<tr>
 
 												<th style="width:40%; font-weight:400;">Test</th>
-												<th style="width:15%; font-weight:400;" class="text-right">Amount</th>
-												<th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
-												<th style="width:15%; font-weight:400;" class="text-center">Discount</th>
-												<th style="width:15%; font-weight:400;" class="text-right">Total</th>
+												<th style="width:30%; font-weight:400;" class="text-right">Amount</th>
+												{{-- <th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
+												<th style="width:15%; font-weight:400;" class="text-center">Discount</th> --}}
+												<th style="width:30%; font-weight:400;" class="text-right">Total</th>
 
 											</tr>
 											</head>
@@ -285,22 +283,22 @@
                                                     <input type="hidden" class="form-control" id="wallet" value="{{$wallet}}">
 												</td>
 
-												<td>
+												{{-- <td>
 													<select name="discount_type" class="form-control" id="disc_type">
 														<option value="">Select</option>
 														<option value="%">%</option>
 														<option value="Rs">Rs</option>
 													</select>
-												</td>
+												</td> --}}
 
-												<td style="width:15%;">
+												{{-- <td style="width:15%;">
 													<input type="hidden" step="0.01" name="discountRs" id="discountRs" class="form-control input-sm text-right"
 														placeholder="Discount in Rs" oninput="calculatePriceinRs(this)">
 
 													<input type="number" step="0.01" name="discount" id="discount"
 														class="form-control input-sm text-right discount" placeholder="Discount in %"
 														oninput="calculatePrice(this)">
-												</td>
+												</td> --}}
 
 												<td style="width:15%;">
 													<input type="number" step="0.01" name="total" id="ta" class="form-control input-sm text-right ta"
@@ -319,18 +317,18 @@
 										<tfoot>
 
 											<tr>
-												<td class="text-right" colspan="4">Advance Paid</td>
+												<td class="text-right" colspan="3">Advance Paid</td>
 												<td class="text-right"><input type="number" step="0.01" name="advance" id="adv"
 														class="form-control input-sm text-right" placeholder="Paid" oninput="calculateBalance()"></td>
 												<td></td>
 											</tr>
 											<tr>
-												<td class="text-right" colspan="4">Balance</td>
+												<td class="text-right" colspan="3">Balance</td>
 												<td class="text-right"><input type="number" step="0.01" name="balance" id="balance"
 														class="form-control input-sm text-right" placeholder="Balance"></td>
 												<td></td>
 											</tr>
-											<tr>
+											{{-- <tr>
 												<td class="text-right" colspan="4">Payment mode</td>
 												<td>
 													<select class="form-control text-right" name="mode">
@@ -341,7 +339,7 @@
 													</select>
 												</td>
 												<td></td>
-											</tr>
+											</tr> --}}
 										</tfoot>
 									</table>
 									{{-- <div>

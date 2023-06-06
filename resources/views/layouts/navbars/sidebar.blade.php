@@ -16,7 +16,7 @@
 	<div class="logo">
 		<a href="" class="simple-text logo-normal">
 			<h4> {{ auth::user()->lab_name }} </h4>
-			<h5> {{ auth::user()->center }} </h5>
+			{{-- <h5> {{ auth::user()->center }} </h5> --}}
 		</a>
 	</div>
 	<div class="sidebar-wrapper">
@@ -44,14 +44,14 @@
 			</li>
             @endif
 
-			@if (auth::user()->coll_center == '1')
+			{{-- @if (auth::user()->coll_center == '1')
 				<li class="nav-item {{ $activePage == 'collcenter' ? ' active' : '' }}">
 					<a class="nav-link" href="{{ route('collcenter') }}">
 						<i class="material-icons">content_paste</i>
 						<p>{{ __('Collection Centers') }}</p>
 					</a>
 				</li>
-			@endif
+			@endif --}}
 			@if (auth::user()->investigations == '1')
 				<li class="nav-item{{ $activePage == 'investigation' ? ' active' : '' }}">
 					<a class="nav-link" href="{{ route('investigation') }}">
@@ -60,14 +60,29 @@
 					</a>
 				</li>
 			@endif
-			@if (auth::user()->coll_agents == '1')
+			{{-- @if (auth::user()->coll_agents == '1')
 				<li class="nav-item{{ $activePage == 'collectionAgents' ? ' active' : '' }}">
 					<a class="nav-link" href="{{ route('collectionAgents') }}">
 						<i class="material-icons">person</i>
 						<p>{{ __('Collection Agents') }}</p>
 					</a>
 				</li>
-			@endif
+			@endif --}}
+
+            <li class="nav-item{{ $activePage == 'collectionAgents' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ route('price_list') }}">
+                    <i class="material-icons">person</i>
+                    <p>{{ __('Price List') }}</p>
+                </a>
+            </li>
+
+            <li class="nav-item{{ $activePage == 'collectionAgents' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ route('collectionAgents') }}">
+                    <i class="material-icons">person</i>
+                    <p>{{ __('Material Orders') }}</p>
+                </a>
+            </li>
+
 			@if (auth::user()->referrer == '1')
 				<li class="nav-item{{ $activePage == 'referrer' ? ' active' : '' }}">
 					<a class="nav-link" href="{{ route('referrer') }}">

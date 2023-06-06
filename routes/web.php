@@ -115,5 +115,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
     // Route::get('profile-view', ['as' => 'profile.view', 'uses' => 'App\Http\Controllers\ProfileController@index']);
 
-
+    Route::prefix('reports')->middleware('auth')->group(function () {
+        Route::get('/collections-report', [App\Http\Controllers\ReportController::class, 'index'])->name('collections-report');
+        Route::get('/test-count-report', [App\Http\Controllers\ReportController::class, 'viewTestCount'])->name('test-count-report');
+    });
 });
