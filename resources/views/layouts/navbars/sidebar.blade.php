@@ -69,9 +69,9 @@
 				</li>
 			@endif --}}
 
-            <li class="nav-item{{ $activePage == 'collectionAgents' ? ' active' : '' }}">
-                <a class="nav-link" href="{{ route('price_list') }}">
-                    <i class="material-icons">person</i>
+            <li class="nav-item{{ $activePage == 'pricelist' ? ' active' : '' }}">
+                <a class="nav-link" href="{{ route('price.list.index') }}">
+                    <i class="material-icons">label</i>
                     <p>{{ __('Price List') }}</p>
                 </a>
             </li>

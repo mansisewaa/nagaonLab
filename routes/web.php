@@ -119,4 +119,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/collections-report', [App\Http\Controllers\ReportController::class, 'index'])->name('collections-report');
         Route::get('/test-count-report', [App\Http\Controllers\ReportController::class, 'viewTestCount'])->name('test-count-report');
     });
+
+    Route::prefix('price')->middleware('auth')->group(function () {
+        Route::get('/index', [App\Http\Controllers\PriceListController::class, 'index'])->name('price.list.index');
+        Route::get('/add-items', [App\Http\Controllers\PriceListController::class, 'addItems'])->name('price.list.add-items');
+    });
 });
