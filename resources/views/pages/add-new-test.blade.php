@@ -202,7 +202,7 @@
 							<div class="form-group col-md-4">
 								<label class="text-dark" style="font-size:1rem;">Referred By</label>
 								<select class="form-control" name="refer" id="refer">
-									<option value="Self">-Select-</option>
+									<option value="Self">-Self-</option>
 									@foreach ($refer as $key => $val)
 										<option value="{{ $val->id }}">{{ $val->doctorname }}
 										</option>
@@ -212,6 +212,7 @@
 								<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">Add new</a>
 
 							</div>
+                        </div>
 							{{-- <div class="form-group col-md-4">
 								<label class="text-dark" style="font-size:1rem;">Collection Center</label>
 								<select class="form-control" name="center" id="center">
@@ -226,7 +227,7 @@
 								{{--<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#collcenter">Add new</a>
 
 							</div> --}}
-                            <div class="form-group col-md-4">
+                            {{-- <div class="form-group col-md-4">
 								@if (auth()->user()->type == 'M')
 									<label class="text-dark" style="font-size:1rem;">Collection Center</label>
 									<select class="form-control" name="center" id="center">
@@ -236,10 +237,10 @@
 											</option>
 										@endforeach
 									</select>
-									{{-- <a href="{{ url('masters/coll_center') }}" class="btn btn-outline-success btn-sm">Add new</a> --}}
+
 
 									<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#collcenter">Add new</a>
-									{{-- modal for coll-center --}}
+
 								@else
 									<label class="text-dark" style="font-size:1rem;">Collection Center</label>
 									<select class="form-control" name="center" id="center">
@@ -260,7 +261,7 @@
 								</select>
 								<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#collagent">Add new</a>
 
-							</div>
+							</div> --}}
 
 							<h3 class="sub-title" style="margin-top:20px">-Payment-</h3>
 							<div class="container">
@@ -269,19 +270,18 @@
 										<thead>
 											<tr>
 
-												<th style="width:40%; font-weight:400;">Test</th>
-												<th style="width:15%; font-weight:400;" class="text-right">Amount</th>
-												<th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
-												<th style="width:15%; font-weight:400;" class="text-center">Discount</th>
-												<th style="width:15%; font-weight:400;" class="text-right">Total</th>
-
+												<th style="font-weight:400;">Test</th>
+												<th style="font-weight:400;" class="text-right">Amount</th>
+												{{-- <th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
+												<th style="width:15%; font-weight:400;" class="text-center">Discount</th> --}}
+												{{-- <th style="width:15%; font-weight:400;" class="text-right">Total</th> --}}
 											</tr>
 											</head>
 										<tbody>
 											<tr>
 												{{-- <td id="sl" class="sl"><li></li></td> --}}
 
-												<td style="width:40%;">
+												<td>
 													<select class="js-example-basic-multiple" name="investigation_name[]" id="testname" multiple="multiple"
 														style="width:350px;">
 														{{-- @foreach ($investigation_name as $key => $values)
@@ -301,12 +301,12 @@
 														<div class="error">{{ $message }}</div>
 													@enderror
 												</td>
-												<td style="width:10%;">
+												<td >
 													<input type="number" step="0.01" name="price" id="price" class="form-control input-sm text-right price"
 														placeholder="Price" oninput="calculatePrice(this)" oninput="calculatePriceinRs(this)">
 												</td>
 
-												<td>
+												{{--<td>
 													<select name="discount_type" class="form-control" id="disc_type">
 														<option value="">Select</option>
 														<option value="%">%</option>
@@ -327,17 +327,16 @@
 													<input type="number" step="0.01" name="total" id="ta" class="form-control input-sm text-right ta"
 														placeholder="Total">
 													<input type="hidden" step="0.01" name="tdiscount" class="from-control input-sm text-right tdiscount">
-												</td>
-
-
-												{{-- <td>
-                                            <button class="btn btn-sm btn-danger" type="button" onclick="removeMe(this)">
-                                                 X
-                                            </button>
-                                        </td> --}}
+												</td>--}}
 											</tr>
+                                            <tr>
+                                                <td class="text-right">Total</td>
+                                                <td class="text-right"><input type="number" step="0.01" name="total" id="balance"
+                                                        class="form-control input-sm text-right" placeholder="Total"></td>
+                                                <td>
+                                            </tr>
 										</tbody>
-										<tfoot>
+										{{-- <tfoot>
 
 											<tr>
 												<td class="text-right" colspan="4">Advance Paid</td>
@@ -363,21 +362,11 @@
 												</td>
 												<td></td>
 											</tr>
-										</tfoot>
+										</tfoot> --}}
 									</table>
-									{{-- <div>
-                                <button class="btn btn-outline-primary btn-sm" type="button" onClick="AddNewRow(this)"><i class="fa fa-plus-sign"></i> Add New</button>
-                            </div> --}}
+
 								</ol>
 							</div>
-							{{-- <div>
-                        <ul class="error">
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div> --}}
-
 							<div class="col-sm-6 offset-5">
 								{{-- <button type="" class="btn btn-info btn-sm">Create Case</button> --}}
 								<button type="submit" class="btn btn-primary btn-sm offset-8">Submit</button>
@@ -580,6 +569,7 @@
 	   })
 	   //   $("#in_price").val(data.price);
 	   $("#price").val(sum);
+       $("#balance").val(sum);
     //    $("#invest_id").u(id);
 
 	  })

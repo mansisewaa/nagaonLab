@@ -34,7 +34,7 @@
 
         .sidebar .nav li a, .sidebar .nav li .dropdown-menu a {
             margin: 10px 15px 0;
-            border-radius: 3px;
+            /* border-radius: 3px; */
             color: #fafafa !important;
             padding-left: 10px;
             padding-right: 10px;
@@ -65,11 +65,10 @@
             width: 258px !important;
             background: #343a40 !important;
             box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%), 0 4px 25px 0px rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
-            border-radius:14px !important;
+            /* border-radius:14px !important; */
         }
-
-
     </style>
+        @yield('css')
     </head>
     <body class="{{ $class ?? '' }}">
         @auth()

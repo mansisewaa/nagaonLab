@@ -200,19 +200,15 @@
 								<table class="table" id="core-services">
 									<thead>
 										<tr>
-                                            <th style="width:40%; font-weight:400;">Test</th>
-                                            <th style="width:15%; font-weight:400;" class="text-right">Amount</th>
-                                            <th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
-                                            <th style="width:15%; font-weight:400;" class="text-center">Discount</th>
-                                            <th style="width:15%; font-weight:400;" class="text-right">Total</th>
+                                            <th style="font-weight:400;">Test</th>
+                                            <th style="font-weight:400;" class="text-right">Amount</th>
+
 
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-
-											<td style="width:40%;">
-
+											<td >
 												<select class="js-example-basic-multiple" name="investigation_name[]" id="testname" multiple="multiple"
                                                      style="width:350px;">
 													@foreach ($investigation_name as $key => $val)
@@ -228,19 +224,19 @@
 													@endforeach
 												</select>
 											</td>
-											<td style="width:15%;">
+											<td >
 												<input type="number" step="0.01" name="price" id="price" class="form-control input-sm text-right price"
 													placeholder="Price" oninput="calculatePrice(this)" value="{{$caseEdit->first()->price}}"  oninput="calculatePriceinRs(this)">
 											</td>
-                                            <td>
+                                            {{-- <td>
                                                 <select name="discount_type" class="form-control" id="disc_type" >
                                                     <option value="">Select</option>
                                                     <option value="%" {{ $caseEdit->first()->discount_type == '%' ? 'selected' : '' }}>%</option>
                                                     <option value="Rs" {{ $caseEdit->first()->discount_type == 'Rs' ? 'selected' : '' }}>Rs</option>
                                                 </select>
-                                            </td>
+                                            </td> --}}
 
-                                            <td style="width:15%;">
+                                            {{-- <td style="width:15%;">
                                                 @if ($caseEdit->first()->discount_type == '%')
                                                     <input type="number" step="0.01" name="discount" id="discount" class="form-control input-sm text-right discount"
                                                        oninput="calculatePrice(this)" value="{{$caseEdit->first()->discount}}">
@@ -255,16 +251,23 @@
                                                        oninput="calculatePrice(this)">
 
                                                 @endif
-                                            </td>
-											<td style="width:15%;">
+                                            </td> --}}
+											{{-- <td style="width:15%;">
 												<input type="number" step="0.01" name="total" id="ta" class="form-control input-sm text-right"
 													placeholder="Total" value="{{$caseEdit->first()->total}}">
-											</td>
-										</tr>
-									</tbody>
-									<tfoot>
+											</td> --}}
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right" >Total</td>
+                                                <td class="text-right"><input type="number" step="0.01" name="total" id="balance"
+                                                        class="form-control input-sm text-right" placeholder="Balance" value="{{$caseEdit->first()->total}}"></td>
+                                                <td></td>
+                                            </tr>
 
-										<tr>
+									</tbody>
+									{{-- <tfoot>
+
+										 <tr>
 											<td class="text-right" colspan="4">Advance Paid</td>
 											<td class="text-right"><input type="number" step="0.01" name="advance" id="adv"
 													class="form-control input-sm text-right" placeholder="Paid" value="{{$caseEdit->first()->advance}}" oninput="calculateBalance()"></td>
@@ -288,7 +291,7 @@
 											</td>
 											<td></td>
 										</tr>
-									</tfoot>
+									</tfoot> --}}
 								</table>
 
 							</ol>
@@ -476,7 +479,6 @@
 		{{-- onchange price --}}
         <script>
             $(function() {
-
                 $('#testname').on("change", function() {
                     var a = $(this).val();
                     var sum = 0;
@@ -492,6 +494,7 @@
                     })
                     //   $("#in_price").val(data.price);
                     $("#price").val(sum);
+                    $("#balance").val(sum);
                     //    $("#invest_id").u(id);
 
                 })

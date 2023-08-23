@@ -6,3 +6,4 @@
     {{-- @include('layouts.footers.auth') --}}
   </div>
 </div>
+

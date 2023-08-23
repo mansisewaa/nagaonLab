@@ -165,12 +165,12 @@
 
                                                 <a href="{{ url('masters/add-new-test/' . $data->id) }}" type="button" style="margin-right:.6rem;" class="btn btn-outline-primary btn-sm">New Visit</a>
 
-                                                 @if( auth::user()->edit_permission == 1)
-                                                    <a href="{{ url('masters/edit-patient-details/' . $data->id) }}"style="margin-right:.6rem;" type="submit"
+                                                @if( auth::user()->edit_permission == 1)
+                                                    <a href="{{ url('masters/edit-patient-details/'.$data->id) }}"style="margin-right:.6rem;" type="submit"
                                                     class="btn btn-outline-info btn-sm">Edit</a>
                                                 @endif
                                                 @if( auth::user()->update_status == 1)
-                                                <a href="{{ url('masters/edit-status/' . $data->id) }}"  style="margin-right:.6rem;" type="button" class="btn btn-outline-warning btn-sm"
+                                                <a href="{{ url('masters/edit-status/'.$data->id) }}"  style="margin-right:.6rem;" type="button" class="btn btn-outline-warning btn-sm"
 													data-toggle="modal" data-target="#updateStatus{{ $data->id }}">Status</a>
 
 												<div class="modal fade" id="updateStatus{{ $data->id }}" role="dialog">

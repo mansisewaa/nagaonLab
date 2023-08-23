@@ -189,11 +189,11 @@ class PatientDetailsController extends Controller
                     'coll_center_id' => auth()->user()->id,
                     'transaction_id' => $patientdetails->id,
                     'ledger_type'    => 'PB', // patient bill
-                    'debit'          => $request->input('advance'),
+                    'debit'          => $request->input('total'),
                 ];
                 Ledger::create($ledger_data);
                 $wallet = User::where('id', auth()->user()->id)->first();
-                $updated_amount = $wallet->wallet_balance - $request->input('advance');
+                $updated_amount = $wallet->wallet_balance - $request->input('total');
                 $wallet->update(['wallet_balance' => $updated_amount]);
             }
         } catch (\Throwable $th) {
@@ -293,11 +293,11 @@ class PatientDetailsController extends Controller
                     'coll_center_id' => auth()->user()->id,
                     'transaction_id' => $patientdetails->id,
                     'ledger_type'    => 'PB', // patient bill
-                    'debit'          => $request->input('advance'),
+                    'debit'          => $request->input('total'),
                 ];
                 Ledger::create($ledger_data);
                 $wallet = User::where('id', auth()->user()->id)->first();
-                $updated_amount = $wallet->wallet_balance - $request->input('advance');
+                $updated_amount = $wallet->wallet_balance - $request->input('total');
                 $wallet->update(['wallet_balance' => $updated_amount]);
             }
         } catch (\Throwable $th) {
@@ -308,7 +308,6 @@ class PatientDetailsController extends Controller
                 ->with('error', $th->getMessage());
         }
         DB::commit();
-
         return redirect()->route('patientdetails')->with('status', 'New Case Added Successfully');
     }
 
@@ -391,7 +390,7 @@ class PatientDetailsController extends Controller
         DB::beginTransaction();
         try {
 
-            $patientdetails = PatientDetails::find($id)->update([
+            $patientdetails = PatientDetails::where('id',$id)->update([
 
                 'title'      => $request->input('title'),
                 'fname'      => $request->input('fname'),
@@ -423,7 +422,7 @@ class PatientDetailsController extends Controller
             $test = Test::where('patient_details_id', $id)->update([
                 'price'    => request("price"),
                 'discount' => request("discount"),
-                'discountRs'    => request("discountRs"),
+                'discountRs' => request("discountRs"),
                 'total'    => request('total'),
                 'advance'  => request("advance"),
                 'balance'  => request('balance'),

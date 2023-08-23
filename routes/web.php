@@ -123,5 +123,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::prefix('price')->middleware('auth')->group(function () {
         Route::get('/index', [App\Http\Controllers\PriceListController::class, 'index'])->name('price.list.index');
         Route::get('/add-items', [App\Http\Controllers\PriceListController::class, 'addItems'])->name('price.list.add-items');
+        Route::put('/store', [App\Http\Controllers\PriceListController::class, 'store'])->name('price.list.store');
     });
 });

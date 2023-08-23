@@ -6,8 +6,8 @@
     <div class="container-fluid  col-md-12 col-lg-12">
         <div class="card">
             <div class="card-header card-header-primary d-flex justify-content-between">
-                <h3 class="card-title">Add Items </h3>
-                <a href="" class="btn btn-info btn-sm button" data-toggle="modal" data-target="#myModal">Price List</a>
+                <h3 class="card-title">Price List</h3>
+                <a href="" class="btn btn-info btn-sm button" data-toggle="modal" data-target="#myModal">Add Items</a>
             </div>
             <div class="card-body">
                 @if (session('status'))
@@ -22,7 +22,20 @@
                     </div>
                 </div>
                 @endif
+                <div class="table-responsive ">
+                    <table class="table table-hover ">
+                        <thead class="text-primary">
+                            <th>SL</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
 
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

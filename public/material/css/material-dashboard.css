@@ -54,7 +54,7 @@ section {
 
 body {
   margin: 0;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  /* font-family: "Roboto", "Helvetica", "Arial", sans-serif; */
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -458,7 +458,7 @@ section {
 
 body {
   margin: 0;
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  /* font-family: "Roboto", "Helvetica", "Arial", sans-serif; */
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -2302,6 +2302,7 @@ select.form-control-lg:not([size]):not([multiple]),
   flex-wrap: wrap;
   margin-right: -5px;
   margin-left: -5px;
+  margin-top: 3px;
 }
 
 .form-row>.col,
@@ -10620,13 +10621,21 @@ fieldset[disabled][disabled] .btn-group-raised .btn,
   border-radius: 0.2rem;
 }
 
-.btn.btn-sm,
+/* .btn.btn-sm,
 .btn-group-sm>.btn,
 .btn-group-sm .btn {
   padding: 0.40625rem 1.25rem;
   font-size: 0.6875rem;
   line-height: 1.5;
   border-radius: 0.2rem;
+} */
+.btn.btn-sm,
+.btn-group-sm>.btn,
+.btn-group-sm .btn {
+    padding: 0.4rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
 }
 
 .btn.btn-round {

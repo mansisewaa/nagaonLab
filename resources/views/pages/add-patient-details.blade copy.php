@@ -106,7 +106,7 @@
 						<div class="form-row">
 
 							<div class="form-group col-md-2">
-
+								{{-- <label class="text-dark" style="font-size:1rem;">Title</label> --}}
 								<select class="form-control" name="title" id="title">
 									<option value="ns"> Title </option>
 									<option value="Miss">Miss</option>
@@ -136,7 +136,7 @@
 							<div class="form-group col-md-4">
 								<label class="text-dark" style="font-size:1rem;">Age</label>
 								<input type="text" class="form-control" placeholder="years" name="years">
-
+								{{-- <div class="input-group-text">@</div> --}}
 							</div>
 							<div class="form-group col-md-4">
 								<input type="text" class="form-control" placeholder="m" name="months">
@@ -198,7 +198,7 @@
 							<div class="form-group col-md-4">
 								<label class="text-dark" style="font-size:1rem;">Referred By</label>
 								<select class="form-control" name="refer" id="refer">
-									<option value="Self">-Self-</option>
+									<option value="Self">-Select-</option>
 									@foreach ($refer as $key => $val)
 										<option value="{{ $val->id }}">{{ $val->doctorname }}
 										</option>
@@ -208,7 +208,7 @@
 								<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">Add new</a>
 
 							</div>
-							{{-- <div class="form-group col-md-4">
+							<div class="form-group col-md-4">
 								@if (auth()->user()->type == 'M')
 									<label class="text-dark" style="font-size:1rem;">Collection Center</label>
 									<select class="form-control" name="center" id="center">
@@ -218,9 +218,10 @@
 											</option>
 										@endforeach
 									</select>
+									{{-- <a href="{{ url('masters/coll_center') }}" class="btn btn-outline-success btn-sm">Add new</a> --}}
 
 									<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#collcenter">Add new</a>
-
+									{{-- modal for coll-center --}}
 								@else
 									<label class="text-dark" style="font-size:1rem;">Collection Center</label>
 									<select class="form-control" name="center" id="center">
@@ -240,8 +241,8 @@
 									@endforeach
 								</select>
 								<a href="" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#collagent">Add new</a>
-							</div> --}}
-                        </div>
+
+							</div>
 
 							<h3 class="sub-title" style="margin-top:20px">-Payment-</h3>
 							<div class="container">
@@ -249,22 +250,34 @@
 									<table class="table" id="core-services">
 										<thead>
 											<tr>
+
 												<th style="font-weight:400;">Test</th>
 												<th style="font-weight:400;" class="text-right">Amount</th>
+												{{-- <th style="width:15%; font-weight:400;" class="text-center">Discount Type</th>
+												<th style="width:15%; font-weight:400;" class="text-center">Discount</th> --}}
+												{{-- <th style="width:30%; font-weight:400;" class="text-right">Total</th> --}}
+
 											</tr>
 											</head>
 										<tbody>
 											<tr>
+												{{-- <td id="sl" class="sl"><li></li></td> --}}
+
 												<td >
 													<select class="js-example-basic-multiple" name="investigation_name[]" id="testname" multiple="multiple"
 														style="width:350px;">
-
+														{{-- @foreach ($investigation_name as $key => $values)
+															<option data-price="{{ $key }}" value="{{ $values }}-{{ $key }}">
+																{{ $values }}-{{ $key }}
+															</option>
+														@endforeach --}}
 														@foreach ($investigation_name as $val)
 															<option data-price="{{ $val->price }}" data-id="{{ $val->id }}"
 																value="{{ $val->investname }}-{{ $val->price }}">{{ $val->investname }}-{{ $val->price }}
 															</option>
 														@endforeach
 													</select>
+													{{-- <input type="text" name="invest_id[]" id="invest_id" class="form-control input-sm text-right price"> --}}
 
 													@error('investigation_name')
 														<div class="error">{{ $message }}</div>
@@ -275,20 +288,72 @@
 														placeholder="Price" oninput="calculatePrice(this)"{{--  oninput="calculatePriceinRs(this)" --}}>
                                                     <input type="hidden" class="form-control" id="wallet" value="{{$wallet}}">
 												</td>
+
+												{{-- <td>
+													<select name="discount_type" class="form-control" id="disc_type">
+														<option value="">Select</option>
+														<option value="%">%</option>
+														<option value="Rs">Rs</option>
+													</select>
+												</td> --}}
+
+												{{-- <td style="width:15%;">
+													<input type="hidden" step="0.01" name="discountRs" id="discountRs" class="form-control input-sm text-right"
+														placeholder="Discount in Rs" oninput="calculatePriceinRs(this)">
+
+													<input type="number" step="0.01" name="discount" id="discount"
+														class="form-control input-sm text-right discount" placeholder="Discount in %"
+														oninput="calculatePrice(this)">
+												</td> --}}
+
+												{{-- <td style="width:15%;">
+													<input type="number" step="0.01" name="total" id="ta" class="form-control input-sm text-right ta"
+														placeholder="Total">
+													<input type="text" step="0.01" name="tdiscount" class="from-control input-sm text-right tdiscount">
+												</td> --}}
 											</tr>
                                             <tr>
                                                 <td class="text-right">Total</td>
-                                                <td class="text-right"><input type="number" step="0.01" name="total" id="balance"
+                                                <td class="text-right"><input type="number" step="0.01" name="balance" id="balance"
                                                         class="form-control input-sm text-right" placeholder="Total"></td>
                                                 <td>
                                             </tr>
 										</tbody>
+										{{-- <tfoot>
 
+											 <tr>
+												<td class="text-right" >Advance Paid</td>
+												<td class="text-right"><input type="number" step="0.01" name="advance" id="adv"
+														class="form-control input-sm text-right" placeholder="Paid" oninput="calculateBalance()"></td>
+												<td></td>
+											</tr>
+
+											<tr>
+												<td class="text-right" colspan="4">Payment mode</td>
+												<td>
+													<select class="form-control text-right" name="mode">
+														<option value="ns">Select</option>
+														<option value="CASH">CASH</option>
+														<option value="CARD">CARD</option>
+														<option value="CARD">UPI</option>
+													</select>
+												</td>
+												<td></td>
+											</tr>
+										</tfoot> --}}
 									</table>
-
+									{{-- <div>
+                                <button class="btn btn-outline-primary btn-sm" type="button" onClick="AddNewRow(this)"><i class="fa fa-plus-sign"></i> Add New</button>
+                            </div> --}}
 								</ol>
 							</div>
-
+							{{-- <div>
+                        <ul class="error">
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div> --}}
 
 							<div class="col-sm-6 offset-5">
 								{{-- <button type="" class="btn btn-info btn-sm">Create Case</button> --}}

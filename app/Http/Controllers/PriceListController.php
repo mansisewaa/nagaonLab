@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PriceList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PriceListController extends Controller
 {
@@ -13,7 +15,8 @@ class PriceListController extends Controller
      */
     public function index()
     {
-        return view('pages.price.index');
+        $items = PriceList::get();
+        return view('pages.material_orders.index',compact('items'));
     }
 
     /**
@@ -23,7 +26,7 @@ class PriceListController extends Controller
      */
     public function addItems()
     {
-        return view('pages.price.add');
+        return view('pages.material_orders.add');
     }
 
     /**
@@ -34,7 +37,27 @@ class PriceListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $item = PriceList::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                // 'code' => Str::slug($request->name),
+            ]);
+            DB::commit();
+            return redirect()->back()->with('status','Item Added');
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return redirect()->back()->with('error','Something went wrong');
+        }
+
     }
 
     /**
